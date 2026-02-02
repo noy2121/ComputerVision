@@ -1,0 +1,46 @@
+defaults:
+  - _self_
+  - override hydra/hydra_logging: disabled
+  - override hydra/job_logging: disabled
+
+hydra:
+  output_subdir: null
+  run:
+    dir: .
+
+data:
+  root_dir: "data/"
+  datasets:
+    - name: "FruitVegetableDiseases"
+      enabled: true
+    - name: "FruitQ"
+      enabled: true
+
+  train_split: 0.7
+  val_split: 0.15
+  test_split: 0.15
+  num_workers: 4
+
+  transforms:
+    image_size: 224
+    mean: [0.485, 0.456, 0.406]
+    std: [0.229, 0.224, 0.225]
+
+training:
+  batch_size: 32
+  epochs: 50
+  learning_rate: 0.001
+  weight_decay: 0.0001
+
+model:
+  name: "resnet50"
+  pretrained: true
+  num_classes: 28
+  freeze_backbone: false
+
+paths:
+  checkpoints: "checkpoints"
+  logs: "logs"
+  results: "results"
+
+seed: 42

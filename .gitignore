@@ -13,3 +13,11 @@ venv/
 data/
 *.sqlite3
 *.zip
+
+# outputs
+results/
+checkpoints/
+logs/
+
+# Agent
+.claude/
