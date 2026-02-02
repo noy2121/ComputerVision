@@ -10,6 +10,8 @@ hydra:
 
 data:
   root_dir: "data/"
+  mode: "train"
+
   datasets:
     - name: "FruitVegetableDiseases"
       enabled: true
@@ -31,16 +33,16 @@ training:
   epochs: 50
   learning_rate: 0.001
   weight_decay: 0.0001
+  early_stopping_patience: 10
+  early_stopping_min_delta: 0.001
 
 model:
   name: "resnet50"
   pretrained: true
-  num_classes: 28
+  num_classes: 30
   freeze_backbone: false
 
 paths:
   checkpoints: "checkpoints"
   logs: "logs"
   results: "results"
-
-seed: 42
