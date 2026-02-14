@@ -73,6 +73,6 @@ paths:
 dashboard:
   host: "127.0.0.1"
   port: 8050
-  debug: true
+  debug: false
 
 seed: 42
