@@ -1,0 +1,58 @@
+defaults:
+  - _self_
+  - override hydra/hydra_logging: disabled
+  - override hydra/job_logging: disabled
+
+hydra:
+  output_subdir: null
+  run:
+    dir: .
+
+data:
+  root_dir: "data/"
+  mode: "train"
+  splits_dir: "data/"
+
+  datasets:
+    - name: "FruitVegetableDiseases"
+      enabled: true
+    - name: "FruitQ"
+      enabled: true
+
+  train_split: 0.7
+  val_split: 0.15
+  test_split: 0.15
+  num_workers: 4
+
+  transforms:
+    image_size: 224
+    mean: [0.485, 0.456, 0.406]
+    std: [0.229, 0.224, 0.225]
+
+training:
+  batch_size: 32
+  epochs: 50
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  early_stopping_patience: 10
+  early_stopping_min_delta: 0.001
+
+model:
+  name: "resnet50"
+  pretrained: true
+  num_classes: 30
+  freeze_backbone: false
+
+detector:
+  model_name: "yolov8n"
+  weights: "yolov8n.pt"
+  image_size: 640
+  conf_threshold: 0.25
+  iou_threshold: 0.45
+
+paths:
+  checkpoints: "checkpoints"
+  logs: "logs"
+  results: "results"
+
+seed: 42

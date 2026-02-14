@@ -23,9 +23,11 @@ class Detector:
 
         print(f'Loaded {model_name} from {weights_path}')
 
-    def predict(self, source, save=False, save_dir=None):
+    def predict(self, source, save=False, save_dir=None, run_name=None):
         if self.model is None:
             raise ValueError("Model not loaded. Call load_model() first.")
+
+        project_dir = Path(save_dir).resolve() if save_dir else None
 
         results = self.model.predict(
             source=source,
@@ -33,7 +35,10 @@ class Detector:
             conf=self.cfg.detector.conf_threshold,
             iou=self.cfg.detector.iou_threshold,
             save=save,
-            project=save_dir
+            # project=save_dir
+            project=str(project_dir) if project_dir else None,
+            name=run_name,        # ✅ folder name instead of predict/predict2
+            exist_ok=True         # ✅ reuse same folder name (no auto predict2)
         )
         return results
 

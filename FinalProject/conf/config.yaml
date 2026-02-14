@@ -6,11 +6,12 @@ defaults:
 hydra:
   output_subdir: null
   run:
-    dir: .
+    dir: ${hydra:runtime.cwd}
 
 data:
   root_dir: "data/"
   mode: "train"
+  splits_dir: "data/"
 
   datasets:
     - name: "FruitVegetableDiseases"
@@ -42,6 +43,16 @@ model:
   num_classes: 30
   freeze_backbone: false
 
+classifier:
+  checkpoint: "checkpoints/best_model.pth"
+
+
+# detector:
+#   model_name: "yolov8n"
+#   weights: "yolov8n.pt"
+#   image_size: 640
+#   conf_threshold: 0.25
+#   iou_threshold: 0.45
 detector:
   model_name: "yolov8n"
   weights: "yolov8n.pt"
@@ -49,9 +60,17 @@ detector:
   conf_threshold: 0.25
   iou_threshold: 0.45
 
+experiment: "det_yolov8n_crop_resnet50"
+
+# paths:
+#   checkpoints: "checkpoints"
+#   logs: "logs"
+#   results: "results"
 paths:
-  checkpoints: "checkpoints"
-  logs: "logs"
-  results: "results"
+  run_dir: "runs/${experiment}"
+  checkpoints: "${paths.run_dir}/checkpoints"
+  logs: "${paths.run_dir}/logs"
+  results: "${paths.run_dir}/results"
+
 
 seed: 42
