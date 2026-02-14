@@ -190,16 +190,26 @@ class Classifier:
     def load_weights(self, path_or_filename: str):
         p = Path(path_or_filename)
 
-        # If it's a real path (relative to cwd or absolute) -> use it
-        if p.exists():
-            checkpoint_path = p
-        else:
-            # Otherwise treat it as "filename inside cfg.paths.checkpoints"
-            checkpoint_dir = Path(self.cfg.paths.checkpoints)
-            checkpoint_path = checkpoint_dir / path_or_filename
+        candidates = []
 
-        if not checkpoint_path.exists():
-            raise FileNotFoundError(f"Checkpoint not found: {checkpoint_path}")
+        # 1) If user passed a path (relative/absolute)
+        candidates.append(p)
+
+        # 2) Runs/experiment checkpoints folder
+        candidates.append(Path(self.cfg.paths.checkpoints) / path_or_filename)
+
+        # 3) Project-root "checkpoints/" folder (common after pulling)
+        candidates.append(Path("checkpoints") / path_or_filename)
+
+        checkpoint_path = None
+        for c in candidates:
+            if c.exists():
+                checkpoint_path = c
+                break
+
+        if checkpoint_path is None:
+            tried = "\n".join([f"  - {c}" for c in candidates])
+            raise FileNotFoundError(f"Checkpoint not found. Tried:\n{tried}")
 
         # PyTorch 2.6+: your checkpoint contains DictConfig under 'config'
         checkpoint = torch.load(checkpoint_path, map_location=self.device, weights_only=False)
@@ -210,3 +220,4 @@ class Classifier:
             self.optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
 
         print(f"Checkpoint loaded from {checkpoint_path}")
+

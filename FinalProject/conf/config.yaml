@@ -44,7 +44,7 @@ model:
   freeze_backbone: false
 
 classifier:
-  checkpoint: "checkpoints/best_model.pth"
+  checkpoint: "best_model.pth"
 
 
 # detector:
@@ -62,15 +62,17 @@ detector:
 
 experiment: "det_yolov8n_crop_resnet50"
 
-# paths:
-#   checkpoints: "checkpoints"
-#   logs: "logs"
-#   results: "results"
+
 paths:
   run_dir: "runs/${experiment}"
   checkpoints: "${paths.run_dir}/checkpoints"
   logs: "${paths.run_dir}/logs"
   results: "${paths.run_dir}/results"
 
+
+dashboard:
+  host: "127.0.0.1"
+  port: 8050
+  debug: false
 
 seed: 42
