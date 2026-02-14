@@ -1,22 +1,14 @@
+import os
+import sys
 from pathlib import Path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import hydra
 from omegaconf import DictConfig
 
-from src.pipeline import Pipeline
+from pipeline import Pipeline
+from utils.utils import collect_images
 
-
-IMAGE_EXTENSIONS = ('*.jpg', '*.jpeg', '*.png', '*.bmp', '*.webp')
-
-
-def collect_images(path: Path):
-    if path.is_file():
-        return [path]
-
-    images = []
-    for ext in IMAGE_EXTENSIONS:
-        images.extend(path.glob(ext))
-    return sorted(images)
 
 
 @hydra.main(version_base=None, config_path="../conf", config_name="config")
