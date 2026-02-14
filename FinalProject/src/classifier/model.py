@@ -172,17 +172,41 @@ class Classifier:
 
         print(f'Checkpoint saved to {checkpoint_path}')
 
-    def load_weights(self, filename):
-        checkpoint_dir = Path(self.cfg.paths.checkpoints)
-        checkpoint_path = checkpoint_dir / filename
+    # def load_weights(self, filename):
+    #     checkpoint_dir = Path(self.cfg.paths.checkpoints)
+    #     checkpoint_path = checkpoint_dir / filename
+
+    #     if not checkpoint_path.exists():
+    #         raise FileNotFoundError(f'Checkpoint not found: {checkpoint_path}')
+
+    #     checkpoint = torch.load(checkpoint_path, map_location=self.device)
+    #     self.model.load_state_dict(checkpoint['model_state_dict'])
+
+    #     if self.optimizer is not None:
+    #         self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+
+    #     print(f'Checkpoint loaded from {checkpoint_path}')
+
+    def load_weights(self, path_or_filename: str):
+        p = Path(path_or_filename)
+
+        # If it's a real path (relative to cwd or absolute) -> use it
+        if p.exists():
+            checkpoint_path = p
+        else:
+            # Otherwise treat it as "filename inside cfg.paths.checkpoints"
+            checkpoint_dir = Path(self.cfg.paths.checkpoints)
+            checkpoint_path = checkpoint_dir / path_or_filename
 
         if not checkpoint_path.exists():
-            raise FileNotFoundError(f'Checkpoint not found: {checkpoint_path}')
+            raise FileNotFoundError(f"Checkpoint not found: {checkpoint_path}")
 
-        checkpoint = torch.load(checkpoint_path, map_location=self.device)
-        self.model.load_state_dict(checkpoint['model_state_dict'])
+        # PyTorch 2.6+: your checkpoint contains DictConfig under 'config'
+        checkpoint = torch.load(checkpoint_path, map_location=self.device, weights_only=False)
 
-        if self.optimizer is not None:
-            self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+        self.model.load_state_dict(checkpoint["model_state_dict"])
 
-        print(f'Checkpoint loaded from {checkpoint_path}')
+        if self.optimizer is not None and "optimizer_state_dict" in checkpoint:
+            self.optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+
+        print(f"Checkpoint loaded from {checkpoint_path}")
