@@ -5,36 +5,6 @@ from pathlib import Path
 from src.detector import Detector
 
 
-# @hydra.main(version_base=None, config_path="../../conf", config_name="config")
-# def main(cfg: DictConfig):
-#     print("Initializing Detector...")
-#     detector = Detector(cfg)
-
-#     print(f"\nLoading model: {cfg.detector.model_name}")
-#     detector.load_model()
-
-#     test_images = input("\nEnter path to test images (folder or single image): ").strip()
-
-#     if not Path(test_images).exists():
-#         print(f"Path not found: {test_images}")
-#         return
-
-#     print("\nRunning detection...")
-#     results = detector.predict(
-#         source=test_images,
-#         save=True,
-#         save_dir=cfg.paths.results
-#     )
-
-#     print("\n" + "="*60)
-#     print("Detection Results")
-#     print("="*60)
-#     print(f"Processed {len(results)} image(s)")
-#     print(f"Results saved to: {cfg.paths.results}")
-
-#     total_detections = sum(len(r.boxes) for r in results)
-#     print(f"Total detections: {total_detections}")
-
 @hydra.main(version_base=None, config_path="../../conf", config_name="config")
 def main(cfg: DictConfig):
     print("Initializing Detector...")
@@ -53,7 +23,6 @@ def main(cfg: DictConfig):
     base_results = Path(cfg.paths.results).resolve()
     base_results.mkdir(parents=True, exist_ok=True)
 
-    # ✅ If user gives a folder that contains many class folders (e.g. data/FruitQ),
     # run detection per class folder and save to results/<class_name>
     if p.is_dir():
         subdirs = [d for d in p.iterdir() if d.is_dir()]
@@ -81,7 +50,6 @@ def main(cfg: DictConfig):
                 print(f"Total detections: {total_detections}")
             return
 
-    # ✅ Otherwise: single folder OR single image
     run_name = p.name if p.is_dir() else p.stem
 
     print("\nRunning detection...")

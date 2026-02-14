@@ -42,26 +42,6 @@ class Detector:
         )
         return results
 
-    def predict_and_crop(self, image_path):
-        results = self.predict(source=image_path, save=False)
-
-        crops = []
-        for result in results:
-            boxes = result.boxes
-            img = result.orig_img
-
-            for box in boxes:
-                x1, y1, x2, y2 = map(int, box.xyxy[0])
-                crop = img[y1:y2, x1:x2]
-                crops.append({
-                    'image': crop,
-                    'bbox': (x1, y1, x2, y2),
-                    'confidence': float(box.conf[0]),
-                    'class': int(box.cls[0])
-                })
-
-        return crops
-
     def export(self, format='onnx'):
         if self.model is None:
             raise ValueError("Model not loaded. Call load_model() first.")
