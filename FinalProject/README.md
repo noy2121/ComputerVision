@@ -14,52 +14,59 @@ This repo contains a complete pipeline for crop/produce analysis:
 
 ## Repository Structure
 
+```text
 FinalProject/
 ├─ conf/
-│ └─ config.yaml
+│  └─ config.yaml
 ├─ data/
-│ ├─ FruitQ/
-│ ├─ FruitVegetableDiseases/
-│ ├─ train_images.txt
-│ ├─ val_images.txt
-│ └─ test_images.txt
+│  ├─ FruitQ/
+│  ├─ FruitVegetableDiseases/
+│  ├─ train_images.txt
+│  ├─ val_images.txt
+│  └─ test_images.txt
+├─ results/
+│  ├─ combined_distribution.html
+│  ├─ FruitQ_distribution.html
+│  └─ FruitVegtableDiseases_distribution.html
 ├─ runs/
-│ └─ <experiment_name>/
-│ ├─ checkpoints/
-│ │ └─ best_model.pth
-│ ├─ logs/
-│ └─ results/
-│ └─ classifier_eval_plots/
-│ ├─ confusion_matrix_counts.png
-│ ├─ confusion_matrix_normalized.png
-│ ├─ per_class_precision.png
-│ ├─ per_class_recall.png
-│ ├─ per_class_f1.png
-│ └─ per_class_top_confusions/
-│ └─ top_confusions__<class>.png
-└─ src/
-├─ classifier/
-│ ├─ model.py
-│ ├─ train.py
-│ ├─ evaluate.py
-│ └─ eval_plots.py
-├─ detector/
-│ ├─ model.py
-│ └─ evaluate.py
-├─ data/
-│ ├─ create_splits.py
-│ ├─ analyze_data.py
-│ └─ data_loader.py
-├─ dashboard/
-│ ├─ app.py
-│ └─ tabs/
-│ ├─ inference.py
-│ ├─ performance.py
-│ ├─ dataset.py
-│ └─ evaluation_plots.py
+│  └─ <experiment_name>/
+│     ├─ checkpoints/
+│     │  └─ best_model.pth
+│     └─ results/
+│        └─ classifier_eval_plots/
+│           ├─ confusion_matrix_counts.png
+│           ├─ confusion_matrix_normalized.png
+│           ├─ per_class_precision.png
+│           ├─ per_class_recall.png
+│           ├─ per_class_f1.png
+│           └─ per_class_top_confusions/
+│              └─ top_confusions__<class>.png
+├─ src/
+│  ├─ classifier/
+│  │  ├─ model.py
+│  │  ├─ train.py
+│  │  ├─ evaluate.py
+│  │  └─ eval_plots.py
+│  ├─ detector/
+│  │  ├─ model.py
+│  │  └─ evaluate.py
+│  ├─ data/
+│  │  ├─ create_splits.py
+│  │  ├─ analyze_data.py
+│  │  └─ data_loader.py
+│  ├─ dashboard/
+│  │  ├─ app.py
+│  │  └─ tabs/
+│  │     ├─ inference.py
+│  │     ├─ performance.py
+│  │     ├─ dataset.py
+│  │     └─ evaluation_plots.py
+│  ├─ pipeline.py
+│  └─ utils/
+│     └─ gradcam.py
+│     └─ utils.py      
 ├─ pipeline.py
-└─ utils/
-└─ gradcam.py
+├─ run.py
 
 
 ---
@@ -113,13 +120,11 @@ python -m src.data.create_splits
 > runs/<experiment>/checkpoints/
 > Output example:
 > - runs/det_yolov8n_crop_resnet50/checkpoints/best_model.pth
-
-- python -m src.classifier.train
+> ```python -m src.classifier.train```
 
 > Evaluates validation and test sets and generates plots under:
 > runs/<experiment>/results/classifier_eval_plots/
-
-- python -m src.classifier.evaluate
+> ```python -m src.classifier.evaluate```
 > Generated plots include:
 > Confusion matrix (counts)
 > Confusion matrix (normalized)
@@ -130,7 +135,7 @@ python -m src.data.create_splits
 > - runs/<experiment>/results/classifier_eval_plots/
 
 > Starts the Dash server:
-- python -m src.dashboard.app
+> ```python -m src.dashboard.app```
 > Then open the browser at:
 > - http://127.0.0.1:8050 (default)
 > Dashboard tabs:
@@ -138,12 +143,6 @@ python -m src.data.create_splits
 > - Model Performance
 > - Dataset Overview
 > - Evaluation Plots (reads images from runs/<experiment>/results/classifier_eval_plots)
-
-
-::contentReference[oaicite:0]{index=0}
-
-
-
 
 
 
