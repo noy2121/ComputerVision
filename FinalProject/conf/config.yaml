@@ -47,12 +47,6 @@ classifier:
   checkpoint: "best_model.pth"
 
 
-# detector:
-#   model_name: "yolov8n"
-#   weights: "yolov8n.pt"
-#   image_size: 640
-#   conf_threshold: 0.25
-#   iou_threshold: 0.45
 detector:
   model_name: "yolov8n"
   weights: "yolov8n.pt"

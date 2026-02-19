@@ -3,7 +3,7 @@ from omegaconf import DictConfig
 from pathlib import Path
 
 from src.classifier import Classifier
-from src.classifier.eval_plots import save_classifier_eval_plots  # NEW
+from src.classifier.eval_plots import save_classifier_eval_plots
 
 
 @hydra.main(version_base=None, config_path="../../conf", config_name="config")
@@ -19,7 +19,6 @@ def main(cfg: DictConfig):
 
     print("\nLoading weights...")
     classifier.setup_training()
-    # classifier.load_weights('best_model.pth')
     classifier.load_weights(cfg.classifier.checkpoint)
 
     print("\nRunning evaluation on validation set...")
@@ -31,14 +30,11 @@ def main(cfg: DictConfig):
     test_acc, predictions, labels = classifier.test()
     print(f"Test Accuracy: {test_acc:.2f}%")
 
-    # Build class_names from DataProcessor mapping (index order matters!)
     class_to_idx = classifier.data_processor.class_to_idx
     idx_to_class = {idx: cls for cls, idx in class_to_idx.items()}
     class_names = [idx_to_class[i] for i in range(len(idx_to_class))]
 
-    # Save plots
     plots_dir = Path(cfg.paths.results) / "classifier_eval_plots"
-    # Save plots (function creates classifier_eval_plots/ inside out_dir)
     save_classifier_eval_plots(
         cfg=cfg,
         labels=labels,

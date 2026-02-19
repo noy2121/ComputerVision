@@ -35,10 +35,9 @@ class Detector:
             conf=self.cfg.detector.conf_threshold,
             iou=self.cfg.detector.iou_threshold,
             save=save,
-            # project=save_dir
             project=str(project_dir) if project_dir else None,
-            name=run_name,        # folder name instead of predict/predict2
-            exist_ok=True         # reuse same folder name (no auto predict2)
+            name=run_name,
+            exist_ok=True
         )
         return results
 

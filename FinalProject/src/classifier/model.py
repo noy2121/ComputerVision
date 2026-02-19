@@ -172,33 +172,15 @@ class Classifier:
 
         print(f'Checkpoint saved to {checkpoint_path}')
 
-    # def load_weights(self, filename):
-    #     checkpoint_dir = Path(self.cfg.paths.checkpoints)
-    #     checkpoint_path = checkpoint_dir / filename
-
-    #     if not checkpoint_path.exists():
-    #         raise FileNotFoundError(f'Checkpoint not found: {checkpoint_path}')
-
-    #     checkpoint = torch.load(checkpoint_path, map_location=self.device)
-    #     self.model.load_state_dict(checkpoint['model_state_dict'])
-
-    #     if self.optimizer is not None:
-    #         self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-
-    #     print(f'Checkpoint loaded from {checkpoint_path}')
-
     def load_weights(self, path_or_filename: str):
         p = Path(path_or_filename)
 
         candidates = []
 
-        # 1) If user passed a path (relative/absolute)
         candidates.append(p)
 
-        # 2) Runs/experiment checkpoints folder
         candidates.append(Path(self.cfg.paths.checkpoints) / path_or_filename)
 
-        # 3) Project-root "checkpoints/" folder (common after pulling)
         candidates.append(Path("checkpoints") / path_or_filename)
 
         checkpoint_path = None
@@ -211,7 +193,6 @@ class Classifier:
             tried = "\n".join([f"  - {c}" for c in candidates])
             raise FileNotFoundError(f"Checkpoint not found. Tried:\n{tried}")
 
-        # PyTorch 2.6+: your checkpoint contains DictConfig under 'config'
         checkpoint = torch.load(checkpoint_path, map_location=self.device, weights_only=False)
 
         self.model.load_state_dict(checkpoint["model_state_dict"])

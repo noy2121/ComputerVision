@@ -21,7 +21,6 @@ def _confusion_matrix(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int) 
 
 
 def _precision_recall_f1_from_cm(cm: np.ndarray):
-    # cm[row=true, col=pred]
     tp = np.diag(cm).astype(np.float64)
     fp = cm.sum(axis=0).astype(np.float64) - tp
     fn = cm.sum(axis=1).astype(np.float64) - tp
@@ -68,15 +67,13 @@ def _plot_metric_bars(values: np.ndarray, class_names: List[str], title: str, ou
 
 
 def _plot_top_confusions(cm: np.ndarray, class_names: List[str], out_dir: Path, top_k: int = 5):
-    # For each true class i, show which other predicted classes are most common (excluding correct i->i)
     per_class_dir = _ensure_dir(out_dir / "per_class_top_confusions")
 
     for i, name in enumerate(class_names):
         row = cm[i].copy()
-        row[i] = 0  # exclude correct predictions
+        row[i] = 0
         total = row.sum()
 
-        # If no confusions, skip
         if total == 0:
             continue
 
@@ -84,7 +81,7 @@ def _plot_top_confusions(cm: np.ndarray, class_names: List[str], out_dir: Path, 
         top_vals = row[top_idx]
 
         labels = [class_names[j] for j in top_idx]
-        vals = top_vals / total  # relative within confusions
+        vals = top_vals / total
 
         plt.figure(figsize=(10, 4))
         plt.bar(labels, vals)
@@ -122,7 +119,6 @@ def save_classifier_eval_plots(
     num_classes = len(class_names)
     class_names = list(class_names)
 
-    # Decide output directory
     base_results = Path(out_dir) if out_dir is not None else Path(cfg.paths.results)
     plots_dir = _ensure_dir(base_results / "classifier_eval_plots")
 

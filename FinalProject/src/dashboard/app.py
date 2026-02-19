@@ -36,7 +36,6 @@ def create_app(cfg: DictConfig):
         base = Path(app.server.config["EVAL_PLOTS_DIR"]).resolve()
         file_path = (base / filename).resolve()
 
-        # block path traversal
         if base not in file_path.parents and file_path != base:
             abort(404)
 
@@ -45,7 +44,6 @@ def create_app(cfg: DictConfig):
 
         return send_from_directory(base, filename)
 
-    # ---- UI
     app.layout = html.Div([
         html.H1("Crop Freshness Detection System", style={'textAlign': 'center', 'padding': '20px'}),
 

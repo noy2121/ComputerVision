@@ -23,7 +23,6 @@ def main(cfg: DictConfig):
     base_results = Path(cfg.paths.results).resolve()
     base_results.mkdir(parents=True, exist_ok=True)
 
-    # run detection per class folder and save to results/<class_name>
     if p.is_dir():
         subdirs = [d for d in p.iterdir() if d.is_dir()]
         if subdirs:
